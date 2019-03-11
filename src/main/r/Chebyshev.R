@@ -20,3 +20,14 @@ v <- expand.grid(c(1,2),c(3,4))
 
 grid <- merge(chebknots(11)[[1]],chebknots(11)[[1]])
 ipol(g(grid['x'],grid['y']),grid=c(chebknots(11),chebknots(11)),method='cheb')
+
+
+make.g <- function(){
+    count <- 0
+    g1 <- function(x){
+        count <- count + 1
+        count + x
+    }
+    g1
+}
+
