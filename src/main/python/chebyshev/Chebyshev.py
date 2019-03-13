@@ -80,7 +80,13 @@ class Chebyshev:
         values = Chebyshev._get_sub_grid(x, self.polynomials)
         if len(args) == 2:
             return Chebyshev._interpolate_and_value(self.chebpts, values, y, self.domain[1])
-        else:
+        elif len(args) == 3:
             # calculate values for interpolation on N-1 cubes
             values2 = [Chebyshev._interpolate_and_value(self.chebpts, v, y, self.domain[1]) for v in values]
             return Chebyshev._interpolate_and_value(self.chebpts, values2, args[2], self.domain[2])
+        elif len(args) == 4:
+            # calculate values for interpolation on N-1 cubes
+            z = args[2]
+            values2 = [[Chebyshev._interpolate_and_value(self.chebpts, v2, y, self.domain[1]) for v2 in v] for v in values]
+            values3 = [Chebyshev._interpolate_and_value(self.chebpts, v, z, self.domain[2]) for v in values2]
+            return Chebyshev._interpolate_and_value(self.chebpts, values3, args[3], self.domain[3])
