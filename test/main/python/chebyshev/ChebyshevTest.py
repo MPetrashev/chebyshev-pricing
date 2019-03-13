@@ -59,11 +59,11 @@ class ChebyshevTest(unittest.TestCase):
     def test2DConvexFunc(self):
         def g(x, y):
             return math.sin(x) + math.cos(2 * y) + x * y
-        #check 2d function without domains
+        # check 2d function without domains
         obj = Chebyshev.interpolate(g, 10)
         self.assertAlmostEqual(g(.4, .5), obj(.4, .5))
         self.assertAlmostEqual(g(.5, .4), obj(.5, .4))
-        #and with domains
+        # and with domains
         obj = Chebyshev.interpolate(g, 18, domain=[[-math.pi, math.pi], [-math.pi, math.pi]])
         self.assertAlmostEqual(g(1.4, 1.5), obj(1.4, 1.5))
         self.assertAlmostEqual(g(1.5, 1.4), obj(1.5, 1.4))

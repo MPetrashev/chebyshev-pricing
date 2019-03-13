@@ -73,11 +73,17 @@ class Chebyshev:
         else:
             return [p(x) for p in polynomials]
 
+    def _slice_values(self,values, offset,*args):
+        if offset == len(args) -1:
+            return Chebyshev._interpolate_and_value(self.chebpts, values, args[offset], self.domain[offset])
+        else:
+            values2 = [Chebyshev._interpolate_and_value(self.chebpts, v, args[1], self.domain[1]) for v in values]
+            return Chebyshev._interpolate_and_value(self.chebpts, values2, args[2], self.domain[2])
+
     def __call__(self, *args):
-        x = args[0]
         y = args[1]
 
-        values = Chebyshev._get_sub_grid(x, self.polynomials)
+        values = Chebyshev._get_sub_grid(args[0], self.polynomials)
         if len(args) == 2:
             return Chebyshev._interpolate_and_value(self.chebpts, values, y, self.domain[1])
         elif len(args) == 3:
