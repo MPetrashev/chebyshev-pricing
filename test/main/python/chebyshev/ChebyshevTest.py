@@ -42,6 +42,17 @@ class ChebyshevTest(unittest.TestCase):
         self.assertAlmostEqual(h(0., 0., 3.), obj(0., 0., 3.))
         self.assertAlmostEqual(h(1., 2., 3.), obj(1., 2., 3.))
 
+    def test4DPolynomial(self):
+        def h(x, y, z):
+            return 30 * x + y * 5 + z
+        # check 3d function without domains
+        obj = Chebyshev.interpolate(h, 10)
+        self.assertAlmostEqual(h(.2, .1,.3), obj(.2, .1,.3))
+        # and with domains
+        obj = Chebyshev.interpolate(h, 10, domain=[[-10, 10], [-100, 100], [-1000, 1000]])
+
+        self.assertAlmostEqual(h(0., 3., 0.), obj(0., 3., 0.))
+
     # def testNDimension(self):
     #     r_coefs = np.asarray(r('library(chebpol)\n'
     #                 + 'g <- function(x) x[1] + x[2]^2 + exp(x[3]) + cos(x[4])\n'
