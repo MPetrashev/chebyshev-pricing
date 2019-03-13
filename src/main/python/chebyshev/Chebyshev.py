@@ -81,6 +81,6 @@ class Chebyshev:
         if len(args) == 2:
             return Chebyshev._interpolate_and_value(self.chebpts, values, y, self.domain[1])
         else:
-            z = args[2]
+            # calculate values for interpolation on N-1 cubes
             values2 = [Chebyshev._interpolate_and_value(self.chebpts, v, y, self.domain[1]) for v in values]
-            return Chebyshev._interpolate_and_value(self.chebpts, values2, z, self.domain[2])
+            return Chebyshev._interpolate_and_value(self.chebpts, values2, args[2], self.domain[2])
