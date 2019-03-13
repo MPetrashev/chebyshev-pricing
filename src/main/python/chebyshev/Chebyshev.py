@@ -19,23 +19,28 @@ class Chebyshev:
     @classmethod
     def interpolate(cls, func, degree, domain=None, args: List=[]):
         num_of_dims = len(signature(func).parameters) - len(args)
+        chebpts = cheb.chebpts1(degree + 1)
         func = np.vectorize(func)
         if num_of_dims == 1:
             # Use just standard implementation
             return cheb.Chebyshev.interpolate(func, degree, domain=domain, args=args)
         else:
             if not domain:
-                domain = [cheb.Chebyshev.window] * (num_of_dims-1)
+                domain = [cheb.Chebyshev.window] * (num_of_dims)
 
-            y_levels = mapdomain(cheb.chebpts1(degree + 1), cheb.Chebyshev.window, domain[-1])
-            # for y in y_levels:
-            #     p = cheb.Chebyshev.interpolate(func, degree, domain[0], [y] + args)
-            #     print('x=0, y={}, p={}'.format(y,p(0)))
-            polynomials = [cheb.Chebyshev.interpolate(func, degree, domain[0], [y] + args) for y in y_levels]
+            def create_polynomials(level, args):
+                levels = mapdomain(chebpts, cheb.Chebyshev.window, domain[level])
+                if level == 1:
+                    retVal = [cheb.Chebyshev.interpolate(func, degree, domain[0], [y] + args) for y in levels]
+                    return retVal
+                else:
+                    return [create_polynomials(level-1, [y] + args) for y in levels]
+
+            polynomials = create_polynomials(num_of_dims-1, args)
             return cls(polynomials, degree, domain)
 
             # # Otherwise use recursive implementation
-            # xcheb = cheb.chebpts1(degree + 1)
+            # xcheb = chebpts
             # if not domain:
             #     y_domain = cheb.Chebyshev.window
             #     domain = [y_domain] * num_of_dims
@@ -55,5 +60,9 @@ class Chebyshev:
             idx = bisect_left(self.levels, y)
             return self.polynomials[idx](x)
 
-        obj = cheb.Chebyshev.interpolate(np.vectorize(f), self.degree, self.domain[-1])
-        return obj(args[-1])
+        if len(args) == 2:
+            obj = cheb.Chebyshev.interpolate(np.vectorize(f), self.degree, self.domain[-1])
+            return obj(args[-1])
+        else:
+            return None
+
