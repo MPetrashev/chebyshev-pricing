@@ -19,7 +19,7 @@ class ChebyshevTest(unittest.TestCase):
         self.assertAlmostEqual(27, obj(5))
 
     def test2DPolynomial(self):
-        def g(x,y):
+        def g(x, y):
             return x + y * 10
         # check 2d function without domains
         obj = Chebyshev.interpolate(g, 10)
@@ -33,7 +33,7 @@ class ChebyshevTest(unittest.TestCase):
             return 30 * x + y * 5 + z
         # check 3d function without domains
         obj = Chebyshev.interpolate(h, 10)
-        self.assertAlmostEqual(h(.2, .1,.3), obj(.2, .1,.3))
+        self.assertAlmostEqual(h(.2, .1, .3), obj(.2, .1, .3))
         # and with domains
         obj = Chebyshev.interpolate(h, 10, domain=[[-10, 10], [-100, 100], [-1000, 1000]])
 
@@ -80,12 +80,11 @@ class ChebyshevTest(unittest.TestCase):
         self.assertAlmostEqual(price, obj(23.75), delta=0.001)
 
     def test2D_BlackScholes(self):
-        f = lambda s, sigma: call_price(s, 15., 0.01, sigma, 0.5)
-        obj = Chebyshev.interpolate(f, 25, [[10, 100], [0.1, 1.]])
+        obj = Chebyshev.interpolate(lambda s, sigma: call_price(s, 15., 0.01, sigma, 0.5), 25, [[10, 100], [0.1, 1.]])
         price = obj(23.75, 0.35)
         self.assertAlmostEqual(8.879159263714124, price, delta=0.001)
 
-    # def testND_BlackScholes(self):
-    #     obj = Chebyshev.interpolate(call_price, 25, [[10, 100], [10, 100], [0., .2], [0.1, 1.], [0.5, 5]])
-    #     price = obj(23.75, 15., 0.01, 0.35,  0.5)
-    #     self.assertAlmostEqual(8.879159263714124, price, delta=0.001)
+    def testND_BlackScholes(self):
+        obj = Chebyshev.interpolate(call_price, 15, [[10, 100], [10, 100], [0., .2], [0.1, 1.], [0.5, 5]])
+        price = obj(23.75, 15., 0.01, 0.35,  0.5)
+        self.assertAlmostEqual(8.879159263714124, price, delta=0.001)
