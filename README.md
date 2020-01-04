@@ -1,5 +1,4 @@
 # chebyshev-pricing
-===============================
 
 A Chebyshev multidimensional implementation of pricing functions interpolations to boost Monte-Carlo simulations
 
